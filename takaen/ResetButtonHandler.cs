@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace krjpen
+namespace takaen
 {
     internal class ResetButtonHandler : WinFormHandler
     {
@@ -30,8 +30,10 @@ namespace krjpen
         private void ButtonClick(object? sender, EventArgs e)
         {
             controller.HidePanels();
+            controller.clearBoxes();
             controller.InitPanel.Panel.Enabled = true;
             controller.InitPanel.Panel.Visible = true;
+            controller.ComboBox.ComboBox.DroppedDown = true;
         }
     }
 }

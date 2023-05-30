@@ -1,4 +1,4 @@
-namespace krjpen
+namespace takaen
 {
     internal static class Program
     {

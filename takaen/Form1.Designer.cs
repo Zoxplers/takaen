@@ -1,4 +1,4 @@
-﻿namespace krjpen
+﻿namespace takaen
 {
     partial class Form1
     {

@@ -1,0 +1,2 @@
+Finalize base project and basic functionality.
+Make, build, and publish a minimum viable product.

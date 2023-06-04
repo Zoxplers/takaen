@@ -38,7 +38,6 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
-            Resize += Form1_Resize;
             ResumeLayout(false);
         }
 

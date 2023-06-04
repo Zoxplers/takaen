@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace takaen
 {
-    abstract class WinFormHandler
+    internal class Translator
     {
-        internal abstract Size Size { get; set; }
-        internal abstract Point Location { get; set; }
     }
 }

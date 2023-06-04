@@ -2,17 +2,24 @@ namespace takaen
 {
     public partial class Form1 : Form
     {
+        //Constants
+        internal const String TITLE = "TAKAEN";
+
         //Variables
-        private Controller? controller;
+        private Controller controller;
 
-        public Form1() => InitializeComponent();
-
-        private void Form1_Load(object sender, EventArgs e)
+        //Constructor
+        public Form1()
         {
-            this.Text = "TAKAEN";
-            controller = new Controller(this);
+            InitializeComponent();
+            controller = new Controller();
         }
 
-        private void Form1_Resize(object sender, EventArgs e) => controller?.Resize();
+        //Functions
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.Text = TITLE;
+            controller.Init(this);
+        }
     }
 }

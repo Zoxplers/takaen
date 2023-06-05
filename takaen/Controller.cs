@@ -40,7 +40,7 @@ namespace takaen
                 dataLabel.Text = "Data Version: Unknown";
                 dataLabel.TextAlign = ContentAlignment.MiddleCenter;
 
-                appLabel.Text = "App Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString().Remove(3);
+                appLabel.Text = "App Version: " + fileHandler.AppVersion;
                 appLabel.TextAlign = ContentAlignment.MiddleCenter;
 
                 dataButton.Text = "Download Data";
@@ -112,7 +112,7 @@ namespace takaen
         {
             appButton.Text = "Attempting to Update";
             appButton.Enabled = false;
-            fileHandler.UpdateApp();
+            fileHandler.CheckAppUpdates(appButton);
         }
     }
 }

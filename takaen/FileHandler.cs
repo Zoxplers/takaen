@@ -1,18 +1,20 @@
 ﻿using static System.Environment;
 using System.IO.Compression;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace takaen
 {
     internal class FileHandler
     {
         //Constants
-        private const string DATAURI = "https://github.com/Zoxplers/takaen/raw/main/data.zip", APPURI = "https://github.com/Zoxplers/takaen/releases/download/windows/takaen.zip", UPDATESDIR = "Updates";
+        private const string DATAURI = "https://github.com/Zoxplers/takaen/raw/main/data.zip", APPURI = "https://github.com/Zoxplers/takaen/releases/download/windows/takaen.zip", VERSIONURI = "https://github.com/Zoxplers/takaen/releases/download/windows/version", UPDATESDIR = "Updates";
 
         //Variables
-        Controller controller;
-        HttpClient httpClient;
-        String dataPath;
+        private Controller controller;
+        private HttpClient httpClient;
+        private string dataPath;
+        private string appVersion;
 
         //Constructor
         internal FileHandler(Controller controller)
@@ -20,9 +22,12 @@ namespace takaen
             this.controller = controller;
             httpClient = new HttpClient();
             dataPath = Path.Combine(GetFolderPath(SpecialFolder.ApplicationData), Form1.TITLE, "data");
+            appVersion = Assembly.GetExecutingAssembly().GetName().Version!.ToString().Remove(3);
         }
 
         //Functions
+        public string? AppVersion { get => appVersion; }
+
         internal void ClearUpdates()
         {
             if(Directory.Exists(UPDATESDIR))
@@ -63,6 +68,15 @@ namespace takaen
             Directory.CreateDirectory(dataPath);
             ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath, true);
             LoadData();
+        }
+
+        internal async void CheckAppUpdates(Button appButton)
+        {
+            if (!appVersion.Equals(await httpClient.GetStringAsync(VERSIONURI)))
+            {
+                UpdateApp();
+            }
+            appButton.Text = "Up to date.";
         }
     }
 }

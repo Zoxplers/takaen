@@ -3,23 +3,86 @@ namespace takaen
     public partial class Form1 : Form
     {
         //Constants
-        internal const String TITLE = "TAKAEN";
+        internal const string TITLE = "TAKAEN";
+        private const double RESIZEGRIPSIZE = 0.025, TOPBARSIZE = 0.065;
 
         //Variables
+        private ControlBox controlBox;
         private Controller controller;
+        private Rectangle topBar, resizeGrip;
+        private int topBarSize;
 
         //Constructor
         public Form1()
         {
             InitializeComponent();
+            controlBox = new ControlBox();
             controller = new Controller();
         }
 
         //Functions
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Text = TITLE;
+            this.BackColor = Color.AliceBlue;
+            this.Size = Screen.FromControl(this).Bounds.Size / 2;
+            this.CenterToScreen();
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            topBarSize = (int)(this.Height * TOPBARSIZE);
+            controlBox.Init(this, topBarSize);
             controller.Init(this);
+        }
+
+        /// <summary>
+        ///  Raises the Paint event.
+        ///  Taken from System.Windows.Forms.Form
+        /// </summary>
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            //Variables
+            int gripSize = (int)(this.Height * RESIZEGRIPSIZE);
+            resizeGrip = new Rectangle(this.Width - gripSize, this.Height - gripSize, gripSize, gripSize);
+            topBar = new Rectangle(0, 0, this.Width, topBarSize);
+            StringFormat centeredStringFormat = new StringFormat();
+            centeredStringFormat.Alignment = StringAlignment.Center;
+
+            //Function
+            e.Graphics.FillRectangle(Brushes.PowderBlue, topBar);
+            e.Graphics.DrawString(TITLE, this.Font, Brushes.Black, this.Width / 2, topBarSize * .25f, centeredStringFormat);
+            ControlPaint.DrawSizeGrip(e.Graphics, this.BackColor, resizeGrip);
+
+        }
+
+        /// <summary>
+        ///  Base wndProc encapsulation.
+        ///  Taken from System.Windows.Forms.Form
+        /// </summary>
+        protected override void WndProc(ref Message m)
+        {
+            //Variables
+            bool overriden = false;
+            const int WM_NCHITTEST = 0x84;
+            const nint HT_BOTTOMRIGHT = 17, HT_CAPTION = 2;
+
+            //Function
+            if (m.Msg == WM_NCHITTEST)
+            {
+                var mouseLoc = this.PointToClient(new Point(m.LParam.ToInt32()));
+                if (resizeGrip.Contains(mouseLoc))
+                {
+                    m.Result = HT_BOTTOMRIGHT;
+                    overriden = true;
+                }
+                else if (topBar.Contains(mouseLoc))
+                {
+                    m.Result = HT_CAPTION;
+                    overriden = true;
+                }
+            }
+
+            if (!overriden)
+            {
+                base.WndProc(ref m);
+            }
         }
     }
 }

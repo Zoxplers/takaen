@@ -32,16 +32,13 @@
             // 
             // Form1
             // 
-            AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1280, 720);
-            DoubleBuffered = true;
-            FormBorderStyle = FormBorderStyle.None;
-            MaximizeBox = false;
-            MinimumSize = new Size(720, 480);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
             Name = "Form1";
-            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
+            Resize += Form1_Resize;
             ResumeLayout(false);
         }
 

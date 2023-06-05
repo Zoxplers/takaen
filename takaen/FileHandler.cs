@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static System.Environment;
 
 namespace takaen
 {
     internal class FileHandler
     {
         //Constants
-        internal const String DICTIONARYURI = "";
-        internal const String GRAMMARSURI = "";
+        internal const string DICTIONARYURI = "", GRAMMARSURI = "", DICTIONARYFOLDER = "dictionary", GRAMMARSFOLDER = "grammars";
 
         //Variables
         HttpClient httpClient;
@@ -22,20 +17,17 @@ namespace takaen
         }
 
         //Functions
-        internal bool InitAsync()
+
+        /// <summary>
+        /// Checks if local data folder exists with dictionary and grammar.
+        /// </summary>
+        /// <returns>True if local all folders exist.</returns>
+        internal bool Init()
         {
-            
-            bool init = false;
+            string appdataPath = Path.Combine(GetFolderPath(SpecialFolder.ApplicationData), Form1.TITLE);
 
-            /*
-            var response = httpClient.GetStreamAsync(DICTIONARYURI).GetAwaiter().GetResult();
-            if(response.IsSuccessStatusCode())
-            {
-
-            }
-            */
-
-            return init;
+            return Directory.Exists(appdataPath) && Directory.Exists(Path.Combine(appdataPath, DICTIONARYFOLDER)) && Directory.Exists(Path.Combine(appdataPath, GRAMMARSFOLDER));
         }
+
     }
 }

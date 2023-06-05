@@ -10,6 +10,7 @@ namespace takaen
         private ControlBox controlBox;
         private Controller controller;
         private Rectangle topBar, resizeGrip;
+        private Panel mainPanel;
         private int topBarSize;
 
         //Constructor
@@ -18,18 +19,23 @@ namespace takaen
             InitializeComponent();
             controlBox = new ControlBox();
             controller = new Controller();
+            mainPanel = new Panel();
         }
 
         //Functions
         private void Form1_Load(object sender, EventArgs e)
         {
+            //Form and Control Box
             this.BackColor = Color.AliceBlue;
             this.Size = Screen.FromControl(this).Bounds.Size / 2;
             this.CenterToScreen();
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             topBarSize = (int)(this.Height * TOPBARSIZE);
             controlBox.Init(this, topBarSize);
-            controller.Init(this);
+
+            //Main Panel
+            this.Controls.Add(mainPanel);
+            controller.Init(mainPanel);
         }
 
         /// <summary>
@@ -46,10 +52,12 @@ namespace takaen
             centeredStringFormat.Alignment = StringAlignment.Center;
 
             //Function
+            mainPanel.Location = new Point(gripSize, topBarSize+gripSize);
+            mainPanel.Size = new Size(this.Width - gripSize * 2, this.Height - (topBarSize + gripSize * 2));
             e.Graphics.FillRectangle(Brushes.PowderBlue, topBar);
             e.Graphics.DrawString(TITLE, this.Font, Brushes.Black, this.Width / 2, topBarSize * .25f, centeredStringFormat);
             ControlPaint.DrawSizeGrip(e.Graphics, this.BackColor, resizeGrip);
-
+            controller.ResizeControls();
         }
 
         /// <summary>

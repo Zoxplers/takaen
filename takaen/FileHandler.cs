@@ -1,33 +1,48 @@
 ﻿using static System.Environment;
+using System.IO.Compression;
 
 namespace takaen
 {
     internal class FileHandler
     {
         //Constants
-        internal const string DICTIONARYURI = "", GRAMMARSURI = "", DICTIONARYFOLDER = "dictionary", GRAMMARSFOLDER = "grammars";
+        private const string DATAURI = "", GRAMMARSURI = "", DICTIONARYFOLDER = "dictionary", GRAMMARSFOLDER = "grammars";
 
         //Variables
+        Controller controller;
         HttpClient httpClient;
+        String dataPath;
 
         //Constructor
-        internal FileHandler()
+        internal FileHandler(Controller controller)
         {
+            this.controller = controller;
             httpClient = new HttpClient();
+            dataPath = Path.Combine(GetFolderPath(SpecialFolder.ApplicationData), Form1.TITLE, "data");
         }
 
         //Functions
-
-        /// <summary>
-        /// Checks if local data folder exists with dictionary and grammar.
-        /// </summary>
-        /// <returns>True if local all folders exist.</returns>
-        internal bool Init()
+        internal void LoadData()
         {
-            string appdataPath = Path.Combine(GetFolderPath(SpecialFolder.ApplicationData), Form1.TITLE);
-
-            return Directory.Exists(appdataPath) && Directory.Exists(Path.Combine(appdataPath, DICTIONARYFOLDER)) && Directory.Exists(Path.Combine(appdataPath, GRAMMARSFOLDER));
+            if (Directory.Exists(dataPath))
+            {
+                controller.UpdateDataVersion(Int32.Parse(File.ReadAllText(Path.Combine(dataPath, "version"))));
+            }
+            else
+            {
+                MessageBox.Show("Data folder does not exist.");
+            }
         }
 
+        internal async void UpdateData()
+        {
+            HttpRequestMessage request = new HttpRequestMessage();
+            Stream data = await httpClient.GetStreamAsync(DATAURI);
+
+            Directory.CreateDirectory(dataPath);
+            ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath);
+
+            LoadData();
+        }
     }
 }

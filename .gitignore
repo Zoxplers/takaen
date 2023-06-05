@@ -2,7 +2,5 @@
 /takaen/bin
 /takaen/obj
 /takaen/*.user
-/takaen_old/.*
-/takaen_old/bin
-/takaen_old/obj
-/takaen_old/*.user
+/takaen_old
+/data

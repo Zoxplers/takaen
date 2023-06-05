@@ -10,86 +10,100 @@ namespace takaen
         //Variables
         internal FileHandler fileHandler;
         internal Translator translator;
-        internal Panel mainPanel, startingPanel;
-        internal Label title, dataLabel, appLabel;
-        internal Button startButton, downloadButton;
+        internal Panel? mainPanel;
+        internal Panel startPanel, translatePanel;
+        internal Label dataLabel, appLabel;
+        internal Button dataButton, appButton, startButton;
+        internal bool dataExists;
 
         //Constructor
         internal Controller()
         {
-            fileHandler = new FileHandler();
+            fileHandler = new FileHandler(this);
             translator = new Translator();
-            mainPanel = new Panel();
-            startingPanel = new Panel();
-            title = new Label();
+            startPanel = new Panel();
+            translatePanel = new Panel();
             dataLabel = new Label();
             appLabel = new Label();
+            dataButton = new Button();
+            appButton = new Button();
             startButton = new Button();
-            downloadButton = new Button();
-
+            dataExists = false;
         }
 
         //Functions
-        private void fixLayout(Form1 form)
+        private void InitControls()
         {
-            startingPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            startingPanel.BackColor = Color.Azure;
-            startingPanel.Location = new Point(0, 60);
-            startingPanel.Size = new Size(800, 740);
-
-            title.Anchor = AnchorStyles.None;
-            title.Dock = DockStyle.Top;
-            title.Font = new Font(FontFamily.GenericSansSerif, TITLEFONTSIZE, FontStyle.Regular);
-            title.Location = new Point(0, 475);
-            title.Size = new Size(0, 60);
-            title.Text = "     " + Form1.TITLE;
-            title.TextAlign = ContentAlignment.MiddleLeft;
-
-            //dataLabel.Dock = DockStyle.Fill;
-            dataLabel.Anchor = AnchorStyles.Top;
-            dataLabel.Font = new Font(FontFamily.GenericSansSerif, TITLEFONTSIZE / 2, FontStyle.Regular);
-            dataLabel.Location = new Point(100, 0);
-            dataLabel.Size = new Size(600, 370);
-            dataLabel.Text = "Data Version: Unknown";
-            dataLabel.TextAlign = ContentAlignment.TopCenter;
-            dataLabel.BackColor = Color.Black;
-
-            //appLabel.Dock = DockStyle.Fill;
-            appLabel.Anchor = AnchorStyles.Bottom;
-            appLabel.Font = new Font(FontFamily.GenericSansSerif, TITLEFONTSIZE / 2, FontStyle.Regular);
-            appLabel.Location = new Point(100, 370);
-            appLabel.Size = new Size(600, 370);
-            appLabel.Text = "App Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString().Remove(3);
-            appLabel.TextAlign = ContentAlignment.TopCenter;
-            appLabel.BackColor = Color.Orange;
-
- 
-        }
-
-        internal void Init(Form1 form)
-        {
-
-        }
-
-        /*
-        internal void Init(Form1 form)
-        {
-            
-            startingPanel.Controls.Add(dataLabel);
-            startingPanel.Controls.Add(appLabel);
-            startingPanel.Controls.Add(startButton);
-            startingPanel.Controls.Add(downloadButton);
-            mainPanel.Controls.Add(startingPanel);
-            form.Controls.Add(mainPanel);
-
-            fixLayout(form);
-            
-            if(fileHandler.Init())
+            if (mainPanel != null)
             {
+                dataLabel.Text = "Data Version: Unknown";
+                dataLabel.TextAlign = ContentAlignment.MiddleCenter;
 
+                appLabel.Text = "App Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString().Remove(3);
+                appLabel.TextAlign = ContentAlignment.MiddleCenter;
+
+                dataButton.Text = "Download Data";
+                appButton.Text = "Update App";
+                startButton.Text = "Start";
+
+                dataButton.Click += DataButton_Click;
             }
-            
         }
-        */
+
+        internal void ResizeControls()
+        {
+            if (mainPanel != null)
+            {
+                startPanel.Location = new Point((int)(mainPanel.Size.Width * 0.125), 0);
+                startPanel.Size = new Size((int)(mainPanel.Size.Width * 0.75), mainPanel.Size.Height);
+
+                dataLabel.Location = new Point(0, (int)(mainPanel.Size.Height * 0.1));
+                dataLabel.Size = new Size(startPanel.Width, (int)(startPanel.Height * 0.1));
+
+                appLabel.Location = new Point(0, (int)(mainPanel.Size.Height * 0.3));
+                appLabel.Size = new Size(startPanel.Width, (int)(startPanel.Height * 0.1));
+
+                dataButton.Location = new Point((int)(startPanel.Width * 0.4), (int)(mainPanel.Size.Height * 0.2));
+                dataButton.Size = new Size((int)(startPanel.Width * 0.2), (int)(startPanel.Height * 0.1));
+
+                appButton.Location = new Point((int)(startPanel.Width * 0.4), (int)(mainPanel.Size.Height * 0.4));
+                appButton.Size = new Size((int)(startPanel.Width * 0.2), (int)(startPanel.Height * 0.1));
+
+                startButton.Location = new Point((int)(startPanel.Width * 0.3), (int)(mainPanel.Size.Height * 0.6));
+                startButton.Size = new Size((int)(startPanel.Width * 0.4), (int)(startPanel.Height * 0.2));
+            }
+        }
+
+        internal void Init(Panel mainPanel)
+        {
+            this.mainPanel = mainPanel;
+
+            startPanel.Controls.Add(dataLabel);
+            startPanel.Controls.Add(appLabel);
+            startPanel.Controls.Add(dataButton);
+            startPanel.Controls.Add(appButton);
+            startPanel.Controls.Add(startButton);
+
+            mainPanel.Controls.Add(startPanel);
+
+            InitControls();
+
+            fileHandler.LoadData();
+        }
+
+        internal void UpdateDataVersion(int version)
+        {
+            dataExists = true;
+            dataLabel.Text = "Data Version: " + version;
+            dataButton.Text = "Update Data";
+            dataButton.Enabled = true;
+        }
+
+        private void DataButton_Click(object? sender, EventArgs e)
+        {
+            dataButton.Text = "Downloading Data";
+            dataButton.Enabled = false;
+            fileHandler.UpdateData();
+        }
     }
 }

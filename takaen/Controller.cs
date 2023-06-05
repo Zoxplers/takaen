@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace takaen
 {
@@ -43,10 +44,11 @@ namespace takaen
                 appLabel.TextAlign = ContentAlignment.MiddleCenter;
 
                 dataButton.Text = "Download Data";
-                appButton.Text = "Update App";
+                appButton.Text = "Check for Updates";
                 startButton.Text = "Start";
 
                 dataButton.Click += DataButton_Click;
+                appButton.Click += AppButton_Click;
             }
         }
 
@@ -63,11 +65,11 @@ namespace takaen
                 appLabel.Location = new Point(0, (int)(mainPanel.Size.Height * 0.3));
                 appLabel.Size = new Size(startPanel.Width, (int)(startPanel.Height * 0.1));
 
-                dataButton.Location = new Point((int)(startPanel.Width * 0.4), (int)(mainPanel.Size.Height * 0.2));
-                dataButton.Size = new Size((int)(startPanel.Width * 0.2), (int)(startPanel.Height * 0.1));
+                dataButton.Location = new Point((int)(startPanel.Width * 0.375), (int)(mainPanel.Size.Height * 0.2));
+                dataButton.Size = new Size((int)(startPanel.Width * 0.25), (int)(startPanel.Height * 0.1));
 
-                appButton.Location = new Point((int)(startPanel.Width * 0.4), (int)(mainPanel.Size.Height * 0.4));
-                appButton.Size = new Size((int)(startPanel.Width * 0.2), (int)(startPanel.Height * 0.1));
+                appButton.Location = new Point((int)(startPanel.Width * 0.375), (int)(mainPanel.Size.Height * 0.4));
+                appButton.Size = new Size((int)(startPanel.Width * 0.25), (int)(startPanel.Height * 0.1));
 
                 startButton.Location = new Point((int)(startPanel.Width * 0.3), (int)(mainPanel.Size.Height * 0.6));
                 startButton.Size = new Size((int)(startPanel.Width * 0.4), (int)(startPanel.Height * 0.2));
@@ -88,6 +90,7 @@ namespace takaen
 
             InitControls();
 
+            fileHandler.ClearUpdates();
             fileHandler.LoadData();
         }
 
@@ -104,6 +107,12 @@ namespace takaen
             dataButton.Text = "Downloading Data";
             dataButton.Enabled = false;
             fileHandler.UpdateData();
+        }
+        private void AppButton_Click(object? sender, EventArgs e)
+        {
+            appButton.Text = "Attempting to Update";
+            appButton.Enabled = false;
+            fileHandler.UpdateApp();
         }
     }
 }

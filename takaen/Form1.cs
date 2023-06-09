@@ -3,8 +3,8 @@ namespace takaen
     public partial class Form1 : Form
     {
         //Constants
+        private const double RESIZEGRIPSIZE = 0.03, TOPBARSIZE = 0.065;
         internal const string TITLE = "TAKAEN";
-        private const double RESIZEGRIPSIZE = 0.025, TOPBARSIZE = 0.065;
 
         //Variables
         private ControlBox controlBox;
@@ -23,6 +23,8 @@ namespace takaen
         }
 
         //Functions
+        internal int TopBarSize { get => topBarSize; }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             //Form and Control Box
@@ -52,7 +54,7 @@ namespace takaen
             centeredStringFormat.Alignment = StringAlignment.Center;
 
             //Function
-            mainPanel.Location = new Point(gripSize, topBarSize+gripSize);
+            mainPanel.Location = new Point(gripSize, topBarSize + gripSize);
             mainPanel.Size = new Size(this.Width - gripSize * 2, this.Height - (topBarSize + gripSize * 2));
             e.Graphics.FillRectangle(Brushes.PowderBlue, topBar);
             e.Graphics.DrawString(TITLE, this.Font, Brushes.Black, this.Width / 2, topBarSize * .25f, centeredStringFormat);

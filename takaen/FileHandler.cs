@@ -13,8 +13,9 @@ namespace takaen
         //Variables
         private Controller controller;
         private HttpClient httpClient;
-        private string dataPath;
-        private string appVersion;
+        private Scanner? scanner;
+        private string dataPath, appVersion;
+
 
         //Constructor
         internal FileHandler(Controller controller)
@@ -28,21 +29,37 @@ namespace takaen
         //Functions
         public string? AppVersion { get => appVersion; }
 
-        internal void ClearUpdates()
-        {
-            if(Directory.Exists(UPDATESDIR))
-            {
-                Directory.Delete(UPDATESDIR, true);
-            }
-        }
-
         private void LoadApp()
         {
             Process.Start("Updates\\run.bat");
             Application.Exit();
         }
 
-        internal void LoadData()
+        private string? GetNextToken()
+        {
+            const char sep = ',';
+            if(scanner != null)
+            {
+                string? token = scanner.Next(sep);
+                if (token!.EndsWith(sep))
+                {
+                    token = token.Remove(token.Length-1);
+                }
+                
+                return token;
+            }
+            return null;
+        }
+
+        internal void ClearUpdates()
+        {
+            if (Directory.Exists(UPDATESDIR))
+            {
+                Directory.Delete(UPDATESDIR, true);
+            }
+        }
+
+        internal void GetDataVersion()
         {
             if(Directory.Exists(dataPath))
             {
@@ -67,7 +84,7 @@ namespace takaen
             Stream data = await httpClient.GetStreamAsync(DATAURI);
             Directory.CreateDirectory(dataPath);
             ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath, true);
-            LoadData();
+            GetDataVersion();
         }
 
         internal async void CheckAppUpdates(Button appButton)
@@ -75,8 +92,38 @@ namespace takaen
             if (!appVersion.Equals(await httpClient.GetStringAsync(VERSIONURI)))
             {
                 UpdateApp();
+                return;
             }
             appButton.Text = "Up to date.";
+        }
+
+
+        internal void GetKeyData(Dictionary dictionary)
+        {
+            foreach(int key in Enum.GetValues(typeof(Keys)))
+            {
+                scanner = new Scanner(Path.Combine(dataPath, "dictionary\\" + (Keys)key + ".csv"));
+
+                foreach(string languageName in Enum.GetNames(typeof(Languages)))
+                {
+                    if (!(scanner.HasNext() && GetNextToken()!.Equals(languageName)))
+                    {
+                        
+                        MessageBox.Show("Unable to read data.");
+                        throw new Exception();
+                    }
+                }
+
+                while (scanner.HasNext())
+                {
+                    foreach (int language in Enum.GetValues(typeof(Languages)))
+                    {
+                        dictionary[key][language].Add(GetNextToken()!);
+                    }
+                }
+
+                scanner.Close();
+            }
         }
     }
 }

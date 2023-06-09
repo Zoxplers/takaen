@@ -81,20 +81,34 @@ namespace takaen
 
         internal async void UpdateData()
         {
-            Stream data = await httpClient.GetStreamAsync(DATAURI);
-            Directory.CreateDirectory(dataPath);
-            ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath, true);
-            GetDataVersion();
+            try
+            {
+                Stream data = await httpClient.GetStreamAsync(DATAURI);
+                Directory.CreateDirectory(dataPath);
+                ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath, true);
+                GetDataVersion();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         internal async void CheckAppUpdates(Button appButton)
         {
-            if (!appVersion.Equals(await httpClient.GetStringAsync(VERSIONURI)))
+            try
             {
-                UpdateApp();
-                return;
+                if (!appVersion.Equals(await httpClient.GetStringAsync(VERSIONURI)))
+                {
+                    UpdateApp();
+                    return;
+                }
+                appButton.Text = "Up to date.";
             }
-            appButton.Text = "Up to date.";
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
 

@@ -146,7 +146,7 @@
             dataLabel.Text = "Data Version: " + version;
             if(dataExists)
             {
-                dataButton.Text = "Up to date";
+                dataButton.Text = "Up to date.";
                 
             }
             else

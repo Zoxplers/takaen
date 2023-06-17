@@ -132,7 +132,7 @@ namespace takaen
                 {
                     foreach (int language in Enum.GetValues(typeof(Languages)))
                     {
-                        dictionary[key][language].Add(GetNextToken()!);
+                        dictionary[key][language].Add(GetNextToken()!.ToLower());
                     }
                 }
 

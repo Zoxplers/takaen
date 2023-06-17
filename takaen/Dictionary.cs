@@ -18,5 +18,23 @@
 
             fileHandler.GetKeyData(this);
         }
+
+        public override string ToString()
+        {
+            string print = "";
+            foreach (List<List<string>> i in this)
+            {
+                foreach (List<string> j in i)
+                {
+                    foreach(string s in j)
+                    {
+                        print += s + " ";
+                    }
+                    print += "\n";
+                }
+                print += "\n";
+            }
+            return print;
+        }
     }
 }

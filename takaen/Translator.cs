@@ -5,14 +5,13 @@
         //Variables
         private Panel translatePanel;
         private TextBox[] textBoxes;
-        private Dictionary dictionary;
 
         //Constructor
         public Translator(Panel translatePanel, FileHandler fileHandler)
         {
             this.translatePanel = translatePanel;
             textBoxes = new TextBox[3];
-            dictionary = new Dictionary(fileHandler);
+            TranslatorLogic.SetDictionary(new Dictionary(fileHandler));
             Init();
         }
 
@@ -46,23 +45,34 @@
 
         private void Translator_TextChanged(object? sender, EventArgs e)
         {
-            int language = Array.IndexOf(textBoxes, sender);
-            foreach(int i in Enum.GetValues(typeof(Languages)))
+            if (((TextBox)sender!).Modified)//User input
             {
-                if(i == language)
-                {
+                //Variables
+                int language = Array.IndexOf(textBoxes, sender);
 
-                }
-                else
+                //Catch
+                if(((TextBox)sender!).Text == "")
                 {
-                    textBoxes[i].Text = Translate((Languages)i, textBoxes[language].Text);
+                    foreach(var textBox in textBoxes) 
+                    {
+                        textBox.Text = "";
+                    }
+                    return;
+                }
+
+                //Function
+                foreach (int i in Enum.GetValues(typeof(Languages)))
+                {
+                    if (i == language)
+                    {
+
+                    }
+                    else
+                    {
+                        textBoxes[i].Text = TranslatorLogic.Translate((Languages)i, (Languages)language, textBoxes[language].Text);
+                    }
                 }
             }
-        }
-
-        private string Translate(Languages languages, string str)
-        {
-            return str;
         }
 
         /// <summary>

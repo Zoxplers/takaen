@@ -1,0 +1,10 @@
+make sure it is in project output is set to application not console
+add run.bat into the zip
+update version file
+delete windows tag in github
+delete .git/refs/tags/windows
+restart github desktop
+create tag version number
+create tag windows
+push
+create release from tag, upload zip and version file

@@ -59,6 +59,14 @@ namespace takaen
             }
         }
 
+        internal void ClearData()
+        {
+            if (Directory.Exists(dataPath))
+            {
+                Directory.Delete(dataPath, true);
+            }
+        }
+
         internal void GetDataVersion()
         {
             if(Directory.Exists(dataPath))
@@ -84,6 +92,7 @@ namespace takaen
             try
             {
                 Stream data = await httpClient.GetStreamAsync(DATAURI);
+                ClearData();
                 Directory.CreateDirectory(dataPath);
                 ZipFileExtensions.ExtractToDirectory(new ZipArchive(data), dataPath, true);
                 GetDataVersion();

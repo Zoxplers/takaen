@@ -16,7 +16,7 @@
             if(File.Exists(path))
             {
                 reader = new StreamReader(path);
-                token = "";
+                token = string.Empty;
                 SkipWhitespace();
             }
             else
@@ -55,7 +55,7 @@
             }
             else
             {
-                token = "";
+                token = string.Empty;
                 while(!(WHITESPACE.Contains((char)reader.Peek()) || reader.EndOfStream))
                 {
                     token += (char)reader.Read();
@@ -73,7 +73,7 @@
             }
             else
             {
-                token = "";
+                token = string.Empty;
                 while (!(WHITESPACE.Contains((char)reader.Peek()) || reader.EndOfStream || reader.Peek() == sep))
                 {
                     token += (char)reader.Read();

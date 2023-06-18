@@ -21,7 +21,7 @@
 
         public override string ToString()
         {
-            string print = "";
+            string print = string.Empty;
             foreach (List<List<string>> i in this)
             {
                 foreach (List<string> j in i)
@@ -35,6 +35,12 @@
                 print += "\n";
             }
             return print;
+        }
+
+        public List<string> this[Keys key, Languages language]
+        {
+            get { return this[(int)key][(int)language]; }
+            set { this[(int)key][(int)language] = value; }
         }
     }
 }

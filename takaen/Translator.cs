@@ -11,7 +11,7 @@
         {
             this.translatePanel = translatePanel;
             textBoxes = new TextBox[3];
-            TranslatorLogic.SetDictionary(new Dictionary(fileHandler));
+            TranslatorLogic.Dictionary = new Dictionary(fileHandler);
             Init();
         }
 
@@ -51,11 +51,11 @@
                 int language = Array.IndexOf(textBoxes, sender);
 
                 //Catch
-                if(((TextBox)sender!).Text == "")
+                if(((TextBox)sender!).Text == string.Empty)
                 {
                     foreach(var textBox in textBoxes) 
                     {
-                        textBox.Text = "";
+                        textBox.Text = string.Empty;
                     }
                     return;
                 }

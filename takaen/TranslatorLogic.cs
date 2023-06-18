@@ -1,49 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace takaen
+﻿namespace takaen
 {
     internal static class TranslatorLogic
     {
         //Variables
         private static Dictionary? dictionary;
 
+        internal static Dictionary? Dictionary { get => dictionary; set => dictionary = value; }
+
         internal static string Translate(Languages to, Languages from, string text)
         {
-            string translatedText = "";
+            string translatedText = string.Empty;
             List<string> words = Split(text);
 
-            words.ForEach(word =>
+            switch(from)
             {
-                Console.WriteLine(word);
-                translatedText += TranslateWord(to, from, word);
-            });
-
+                case Languages.Tagalog:
+                    switch(to)
+                    {
+                        case Languages.English:
+                            translatedText = CFGTagalogToEnglish.Translate(words);
+                            break;
+                        case Languages.Kapampangan:
+                            translatedText = CFGTagalogToKapampangan.Translate(words);
+                            break;
+                    }
+                    break;
+                case Languages.English:
+                    switch (to)
+                    {
+                        case Languages.Tagalog:
+                            translatedText = CFGEnglishToTagalog.Translate(words);
+                            break;
+                        case Languages.Kapampangan:
+                            translatedText = CFGEnglishToKapampangan.Translate(words);
+                            break;
+                    }
+                    break;
+                case Languages.Kapampangan:
+                    switch (to)
+                    {
+                        case Languages.English:
+                            translatedText = CFGKapampanganToEnglish.Translate(words);
+                            break;
+                        case Languages.Tagalog:
+                            translatedText = CFGKapampanganToTagalog.Translate(words);
+                            break;
+                    }
+                    break;
+            }
             
             return translatedText;
         }
 
-        internal static void SetDictionary(Dictionary dictionary)
-        {
-            TranslatorLogic.dictionary = dictionary;
-        }
-
-        private static string TranslateWord(Languages to, Languages from, string text)
+        internal static string TranslateWord(Languages to, Languages from, string word)
         {
             //Variables
-            (int index, int key) = GetIndexAndKey(from, text);
+            (int index, int key) = GetIndexAndKey(from, word);
             if (index == -1)
             {
-                return text;
+                return word;
             }
             else
             {
-                return GetWord(to, index, key) ?? text;
+                return GetWord(to, index, key) ?? word;
             }
         }
 
@@ -68,7 +87,7 @@ namespace takaen
         {
             if (dictionary != null)
             {
-                return dictionary[(int)key][(int)language][index];
+                return dictionary[key][(int)language][index];
             }
 
             return null;
@@ -78,7 +97,7 @@ namespace takaen
         {
             //Variables
             List<string> list = new List<string>();
-            string word = "";
+            string word = string.Empty;
 
             foreach(char c in str)
             {
@@ -88,12 +107,12 @@ namespace takaen
                 }
                 else
                 {
-                    if (word != "")
+                    if (word != string.Empty)
                     {
                         list.Add(word);
-                        word = "";
+                        word = string.Empty;
                     }
-                    list.Add("" + c);       
+                    list.Add(string.Empty + c);       
                 }
             }
 

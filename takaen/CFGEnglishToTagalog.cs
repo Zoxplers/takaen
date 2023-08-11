@@ -58,14 +58,19 @@
         /// </summary>
         private static bool Pronoun()
         {
-            //*pronoun* *are/is* *any* => *any* *pronoun*
-            if (index+4 < words!.Count && AreIs(2))
+            //*pronoun* *are/is* *adjective* => *adjective* *pronoun*
+            if(index + 4 < words!.Count && AreIs(2))
             {
-                text += TranslatorLogic.TranslateWord(TO, FROM, words[index+4]) + words[index+1] + TranslatorLogic.TranslateWord(TO, FROM, words[index]);
-                index += 5;
-                return true;
+                foreach (string adjective in TranslatorLogic.Dictionary![Keys.Adjectives, Languages.English])
+                {
+                    if (adjective == words[index + 4])
+                    {
+                        text += TranslatorLogic.TranslateWord(TO, FROM, words[index + 4]) + words[index + 1] + TranslatorLogic.TranslateWord(TO, FROM, words[index]);
+                        index += 5;
+                        return true;
+                    }
+                }
             }
-
             return false;
         }
     }

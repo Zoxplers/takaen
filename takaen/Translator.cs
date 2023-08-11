@@ -37,7 +37,6 @@
             textBoxes[0].Parent!.Dock = DockStyle.Left;
             textBoxes[1].Parent!.Dock = DockStyle.Top;
             textBoxes[1].Parent!.BringToFront();
-            textBoxes[1].Parent!.MouseHover += Translator_MouseHover;
             textBoxes[2].Parent!.Dock = DockStyle.Right;
 
             Resize();
@@ -73,15 +72,6 @@
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Small patch because winforms sucks.
-        /// </summary>
-        private void Translator_MouseHover(object? sender, EventArgs e)
-        {
-            Resize();
-            textBoxes[1].Parent!.MouseHover -= Translator_MouseHover;
         }
 
         internal void Resize()

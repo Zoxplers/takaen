@@ -81,8 +81,8 @@
                 startPanel.Location = new Point((int)(mainPanel.Size.Width * 0.125), 0);
                 startPanel.Size = new Size((int)(mainPanel.Size.Width * 0.75), mainPanel.Size.Height);
 
-                translatePanel.Location = new Point((int)(mainPanel.Size.Width * 0.125), 0);
-                translatePanel.Size = new Size((int)(mainPanel.Size.Width * 0.75), mainPanel.Size.Height);
+                translatePanel.Location = new Point((int)(mainPanel.Size.Width * 0.1), 0);
+                translatePanel.Size = new Size((int)(mainPanel.Size.Width * 0.8), mainPanel.Size.Height);
 
                 dataLabel.Location = new Point(0, (int)(mainPanel.Size.Height * 0.1));
                 dataLabel.Size = new Size(startPanel.Width, (int)(startPanel.Height * 0.1));
@@ -178,6 +178,7 @@
 
             currentTranslator?.CleanUp();
             currentTranslator = new Translator(translatePanel, fileHandler);
+            currentTranslator.Resize();
         }
 
         private void MenuButton_Click(object? sender, EventArgs e)
